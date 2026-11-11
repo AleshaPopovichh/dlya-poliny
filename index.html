@@ -1,1 +1,529 @@
-<!-- placeholder -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Полине — новогоднее письмо</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fbf3ea; --blush:#f4d9d4; --rose:#e8b4b0; --berry:#b0363d; --wine:#7d1d24;
+  --sage:#9fb8a0; --pine:#5f7f66; --gold:#c9a25b; --ink:#4a3530;
+  --kraft:#c49a6c; --kraft2:#b78a5b; --kraft3:#a97c4f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Cormorant Garamond",Georgia,serif; color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 50% -10%, #fff8f1 0%, transparent 60%),
+    radial-gradient(900px 600px at 100% 100%, #f6dcd6 0%, transparent 55%),
+    radial-gradient(900px 600px at 0% 100%, #e9efe6 0%, transparent 55%),
+    linear-gradient(180deg,#fbefe8 0%,#f7e4df 100%);
+  min-height:100vh; overflow-x:hidden; -webkit-tap-highlight-color:transparent;
+}
+canvas.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#snow{z-index:1} #fireworks{z-index:2}
+.garland{position:fixed;top:0;left:0;width:100%;height:90px;z-index:5;pointer-events:none}
+.bulb{animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:1;filter:drop-shadow(0 0 6px currentColor)}50%{opacity:.45;filter:none}}
+.deco{position:fixed;z-index:3;pointer-events:none;opacity:.95}
+.deco.tl{left:-6px;bottom:-4px;width:min(30vw,190px)}
+.deco.tr{right:-6px;bottom:-4px;width:min(26vw,170px)}
+.deco.gm{left:min(22vw,150px);bottom:10px;width:min(13vw,72px);animation:sway 4s ease-in-out infinite;transform-origin:50% 100%}
+.deco.gm2{right:min(20vw,140px);bottom:14px;width:min(10vw,58px);animation:sway 5s ease-in-out infinite reverse;transform-origin:50% 100%}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@media (max-width:520px){.deco.gm,.deco.gm2{display:none}}
+
+main{position:relative;z-index:4;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 18px 120px}
+.screen{width:100%;max-width:520px;display:none;flex-direction:column;align-items:center;text-align:center}
+.screen.active{display:flex;animation:fadeUp .8s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+h1,.script{font-family:"Marck Script",cursive;font-weight:400}
+h1{font-size:clamp(34px,8vw,48px);color:var(--wine);line-height:1.1;margin-bottom:6px}
+.sub{font-size:20px;color:#7a5a52;margin-bottom:26px;font-style:italic}
+
+/* ---------- Envelope ---------- */
+.env-wrap{perspective:1200px;margin:6px 0 28px;transition:margin 1s ease .7s}
+.env-wrap.opened{margin-top:140px}
+.env{position:relative;width:min(340px,84vw);aspect-ratio:1.5/1;filter:drop-shadow(0 18px 24px rgba(110,60,40,.28))}
+.env .back{position:absolute;inset:0;border-radius:6px;
+  background:
+   repeating-linear-gradient(35deg,rgba(255,255,255,.035) 0 2px,transparent 2px 6px),
+   repeating-linear-gradient(-55deg,rgba(80,40,10,.04) 0 1px,transparent 1px 5px),
+   linear-gradient(160deg,var(--kraft) 0%,var(--kraft3) 100%)}
+.env .letter{position:absolute;left:6%;right:6%;top:8%;bottom:6%;border-radius:4px;z-index:2;
+  background:linear-gradient(#fffdf8,#fbf1e4);box-shadow:0 2px 6px rgba(0,0,0,.12);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;
+  transition:transform 1.1s cubic-bezier(.2,.8,.2,1) .9s}
+.env .letter .script{font-size:clamp(20px,5.4vw,28px);color:var(--wine)}
+.env .letter small{font-size:15px;color:#8a6a60;font-style:italic}
+.env .side{position:absolute;inset:0;z-index:3;border-radius:6px}
+.env .side.l{clip-path:polygon(0 0,52% 56%,0 100%);background:linear-gradient(90deg,var(--kraft2),var(--kraft))}
+.env .side.r{clip-path:polygon(100% 0,48% 56%,100% 100%);background:linear-gradient(270deg,var(--kraft2),var(--kraft))}
+.env .side.b{clip-path:polygon(0 100%,50% 48%,100% 100%);
+  background:repeating-linear-gradient(35deg,rgba(255,255,255,.04) 0 2px,transparent 2px 6px),linear-gradient(0deg,var(--kraft3),var(--kraft))}
+.env .twine{position:absolute;left:0;right:0;top:60%;height:3px;z-index:4;background:repeating-linear-gradient(90deg,#efe2c9 0 6px,#d9c39c 6px 9px);opacity:.75;transition:opacity .5s}
+.env .flap{position:absolute;left:0;right:0;top:0;height:58%;z-index:5;transform-origin:50% 0;
+  transition:transform .9s cubic-bezier(.5,0,.3,1) .35s, z-index 0s .8s}
+.env .flap::before{content:"";position:absolute;inset:0;clip-path:polygon(0 0,100% 0,50% 100%);
+  background:repeating-linear-gradient(-35deg,rgba(255,255,255,.04) 0 2px,transparent 2px 6px),linear-gradient(180deg,#cfa677,var(--kraft2));
+  border-radius:6px 6px 0 0}
+.seal{position:absolute;left:50%;top:58%;width:74px;height:74px;transform:translate(-50%,-50%);z-index:6;transition:transform .5s, opacity .5s}
+.seal svg{width:100%;height:100%;filter:drop-shadow(0 3px 3px rgba(60,0,0,.35))}
+.seal .half{position:absolute;inset:0;transition:transform .7s cubic-bezier(.3,.6,.4,1),opacity .7s}
+
+.env.open .seal .h1{transform:translate(-30px,40px) rotate(-35deg);opacity:0}
+.env.open .seal .h2{transform:translate(30px,44px) rotate(30deg);opacity:0}
+.env.open .twine{opacity:0}
+.env.open .flap{transform:rotateX(180deg);z-index:1}
+.env.open .letter{transform:translateY(-62%)}
+.env.shake{animation:shake .5s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+.lock{width:min(360px,88vw);display:flex;flex-direction:column;gap:10px;align-items:center}
+.lock label{font-size:21px;color:var(--ink)}
+.field{display:flex;width:100%;gap:8px}
+input[type=text]{flex:1;min-width:0;font:inherit;font-size:20px;padding:12px 16px;border-radius:999px;border:1.5px solid #e2c3bb;background:rgba(255,255,255,.75);color:var(--ink);outline:none;transition:border .2s, box-shadow .2s}
+input[type=text]:focus{border-color:var(--berry);box-shadow:0 0 0 4px rgba(176,54,61,.12)}
+.btn{font:inherit;font-weight:700;font-size:19px;border:none;border-radius:999px;padding:12px 22px;cursor:pointer;color:#fff;
+  background:linear-gradient(180deg,#c4474e,var(--wine));box-shadow:0 6px 16px rgba(125,29,36,.28);transition:transform .15s, box-shadow .15s}
+.btn:active{transform:scale(.96)}
+.btn.soft{background:linear-gradient(180deg,#fff,#f8ece6);color:var(--wine);box-shadow:0 4px 12px rgba(125,29,36,.12);border:1.5px solid #ecd0c8}
+.msg{min-height:26px;font-size:19px;font-style:italic;color:var(--berry)}
+
+/* ---------- Card ---------- */
+.card{width:100%;background:rgba(255,252,247,.86);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border-radius:22px;padding:28px 22px 24px;box-shadow:0 20px 50px rgba(120,60,50,.18);border:1px solid rgba(201,162,91,.35);position:relative}
+.card::before{content:"";position:absolute;inset:7px;border:1px dashed rgba(201,162,91,.5);border-radius:16px;pointer-events:none}
+.progress{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.progress span{font-size:20px;filter:grayscale(1) opacity(.35);transition:filter .4s, transform .4s}
+.progress span.on{filter:none;transform:scale(1.15)}
+.qnum{font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.qtext{font-size:clamp(24px,6vw,29px);font-weight:700;line-height:1.2;margin:8px 0 18px;color:var(--wine)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{font:inherit;font-size:20px;text-align:left;padding:12px 16px;border-radius:14px;border:1.5px solid #ecd3cb;background:#fff;color:var(--ink);cursor:pointer;transition:all .2s}
+.opt:hover{border-color:var(--rose);background:#fff6f3}
+.opt.picked{background:linear-gradient(180deg,#fbe3df,#f6d2cc);border-color:var(--berry)}
+.opts.done .opt:not(.picked){opacity:.45}
+.reply{min-height:56px;margin-top:14px;font-size:20px;font-style:italic;color:var(--pine);opacity:0;transition:opacity .4s}
+.reply.show{opacity:1}
+
+/* ---------- Result / proposal ---------- */
+.big{font-size:clamp(46px,12vw,64px);font-family:"Marck Script",cursive;color:var(--berry);line-height:1}
+.result p{font-size:21px;line-height:1.35;margin:10px 0}
+.names{font-family:"Marck Script",cursive;font-size:clamp(26px,6.6vw,33px);color:var(--wine);line-height:1.25}
+.ring-stage{position:relative;height:170px;width:100%;display:flex;align-items:flex-end;justify-content:center;margin:6px 0 4px}
+.box{position:relative;width:120px;height:80px}
+.box .lid{position:absolute;left:-4px;right:-4px;top:-28px;height:34px;border-radius:14px 14px 6px 6px;transform-origin:50% 100%;
+  background:linear-gradient(180deg,#c4474e,#7d1d24);box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);transition:transform .9s cubic-bezier(.4,1.4,.5,1)}
+.box .base{position:absolute;inset:0;border-radius:6px 6px 14px 14px;background:linear-gradient(180deg,#a8323a,#6a1820);box-shadow:0 10px 20px rgba(90,20,20,.3)}
+.box .velvet{position:absolute;left:14px;right:14px;top:6px;height:26px;border-radius:50%;background:radial-gradient(#4a0f15,#2d080c)}
+.ring{position:absolute;left:50%;bottom:44px;width:78px;transform:translateX(-50%) scale(.6);opacity:0;z-index:5;transition:all 1.4s cubic-bezier(.2,.9,.3,1)}
+.stage-open .lid{transform:rotateX(-110deg) translateY(-4px)}
+.stage-open .ring{opacity:1;transform:translate(-50%,-70px) scale(1);animation:float 3s ease-in-out 1.4s infinite}
+@keyframes float{0%,100%{transform:translate(-50%,-70px) scale(1)}50%{transform:translate(-50%,-80px) scale(1.04)}}
+.ring.fly{animation:none!important;transition:all 1.6s cubic-bezier(.5,0,.2,1);transform:translate(-50%,-150vh) scale(2.2) rotate(30deg)!important;opacity:0!important}
+.sparkle{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff6c9;box-shadow:0 0 10px 3px #ffe9a0;opacity:0}
+.stage-open .sparkle{animation:spark 1.8s ease-in-out infinite}
+@keyframes spark{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1)}}
+.question{font-family:"Marck Script",cursive;font-size:clamp(32px,8.4vw,42px);color:var(--wine);margin:6px 0 18px;line-height:1.15}
+.answers{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;min-height:60px}
+#noBtn{position:relative;transition:transform .25s}
+.final h1{font-size:clamp(44px,11vw,62px)}
+.final p{font-size:22px;line-height:1.4;margin:8px 0}
+.heart{display:inline-block;animation:beat 1.2s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}20%{transform:scale(1.25)}40%{transform:scale(.95)}}
+.hidden{display:none!important}
+#adminBtn{position:fixed;left:12px;top:12px;z-index:20;font-size:15px;padding:9px 14px}
+#adminPanel{position:fixed;inset:0;z-index:30;background:rgba(74,53,48,.35);display:none;align-items:flex-start;justify-content:center;padding:60px 14px;overflow:auto}
+#adminPanel.show{display:flex}
+#adminPanel .card{max-width:560px;text-align:left}
+#adminPanel h2{font-family:"Marck Script",cursive;font-weight:400;color:var(--wine);font-size:34px;margin-bottom:8px}
+.ans-set{border-top:1px dashed rgba(201,162,91,.6);padding-top:12px;margin-top:12px}
+.ans-set .when{font-size:15px;color:var(--gold);font-weight:700;letter-spacing:.05em}
+.ans-set .qa{margin:8px 0;font-size:18px;line-height:1.3}
+.ans-set .qa b{color:var(--wine)}
+.ans-set .yes{font-size:19px;color:var(--pine);font-weight:700;margin-top:6px}
+.opt.own{border-style:dashed;color:#8a5a52;font-style:italic}
+.ownbox{display:none;flex-direction:column;gap:10px;margin-top:4px}
+.ownbox.show{display:flex;animation:fadeUp .4s ease both}
+textarea{font:inherit;font-size:19px;padding:12px 14px;border-radius:14px;border:1.5px solid #e2c3bb;background:#fff;color:var(--ink);resize:vertical;min-height:84px;outline:none}
+textarea:focus{border-color:var(--berry);box-shadow:0 0 0 4px rgba(176,54,61,.12)}
+.btn:disabled{opacity:.45;cursor:default}
+.sendbox{margin-top:22px;padding:18px 16px;border-radius:18px;background:rgba(255,252,247,.85);border:1px dashed rgba(201,162,91,.6);width:100%}
+.sendbox p{font-size:19px!important;margin:0 0 12px!important}
+.sendrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.sendrow a{text-decoration:none;display:inline-block}
+.copied{min-height:22px;font-size:17px;font-style:italic;color:var(--pine);margin-top:8px}
+.fade-in{animation:fadeUp .9s ease both}
+</style>
+</head>
+<body>
+
+<canvas id="snow" class="fx"></canvas>
+<canvas id="fireworks" class="fx"></canvas>
+
+<!-- Гирлянда -->
+<svg class="garland" viewBox="0 0 1000 90" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,10 Q125,70 250,18 T500,18 T750,18 T1000,10" fill="none" stroke="#5f7f66" stroke-width="2.5"/>
+  <g id="bulbs"></g>
+</svg>
+
+<!-- Декор: ёлочки и пряники -->
+<svg class="deco tl" viewBox="0 0 200 200" aria-hidden="true">
+  <polygon points="70,30 120,110 20,110" fill="#9fb8a0"/><polygon points="70,60 130,150 10,150" fill="#8aa98c"/><polygon points="70,95 140,195 0,195" fill="#7c9c7f"/>
+  <circle cx="55" cy="100" r="5" fill="#e8b4b0"/><circle cx="90" cy="135" r="5" fill="#c9a25b"/><circle cx="45" cy="165" r="5" fill="#b0363d"/><circle cx="100" cy="178" r="4" fill="#fbf3ea"/>
+  <polygon points="70,18 74,28 85,28 76,34 79,45 70,38 61,45 64,34 55,28 66,28" fill="#c9a25b"/>
+  <polygon points="160,90 190,150 130,150" fill="#b7cbb7"/><polygon points="160,115 196,195 124,195" fill="#a3bba4"/>
+  <circle cx="150" cy="140" r="4" fill="#e8b4b0"/><circle cx="172" cy="172" r="4" fill="#fbf3ea"/>
+</svg>
+<svg class="deco tr" viewBox="0 0 200 200" aria-hidden="true">
+  <polygon points="120,25 170,105 70,105" fill="#9fb8a0"/><polygon points="120,55 180,145 60,145" fill="#8aa98c"/><polygon points="120,90 195,195 45,195" fill="#7c9c7f"/>
+  <circle cx="105" cy="95" r="5" fill="#b0363d"/><circle cx="145" cy="128" r="5" fill="#e8b4b0"/><circle cx="95" cy="168" r="5" fill="#c9a25b"/><circle cx="150" cy="178" r="4" fill="#fbf3ea"/>
+  <polygon points="120,13 124,23 135,23 126,29 129,40 120,33 111,40 114,29 105,23 116,23" fill="#c9a25b"/>
+  <!-- леденец -->
+  <g transform="translate(22,110) rotate(-12)"><path d="M12,90 L12,22 A14,14 0 1 1 40,22" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+  <path d="M12,90 L12,22 A14,14 0 1 1 40,22" fill="none" stroke="#c4474e" stroke-width="9" stroke-dasharray="7 7" stroke-linecap="butt"/></g>
+</svg>
+<svg class="deco gm" viewBox="0 0 100 130" aria-hidden="true">
+  <g fill="#b9794a"><circle cx="50" cy="26" r="20"/><rect x="28" y="40" width="44" height="58" rx="18"/>
+  <rect x="6" y="48" width="34" height="16" rx="8"/><rect x="60" y="48" width="34" height="16" rx="8"/>
+  <rect x="26" y="84" width="18" height="40" rx="9"/><rect x="56" y="84" width="18" height="40" rx="9"/></g>
+  <g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round">
+  <path d="M10,53 q4,6 0,6 M90,53 q-4,6 0,6"/><path d="M42,32 q8,7 16,0"/><path d="M30,115 h10 M60,115 h10"/></g>
+  <circle cx="43" cy="22" r="2.6" fill="#4a3530"/><circle cx="57" cy="22" r="2.6" fill="#4a3530"/>
+  <circle cx="50" cy="58" r="3.5" fill="#c4474e"/><circle cx="50" cy="72" r="3.5" fill="#9fb8a0"/>
+  <path d="M40,44 l10,5 l10,-5 l-3,7 l-7,-2 l-7,2z" fill="#c4474e"/>
+</svg>
+<svg class="deco gm2" viewBox="0 0 100 100" aria-hidden="true">
+  <path d="M50,92 C10,62 4,38 22,20 C36,8 48,18 50,28 C52,18 64,8 78,20 C96,38 90,62 50,92Z" fill="#b9794a"/>
+  <path d="M50,80 C20,58 16,40 28,28 C38,20 46,26 50,36 C54,26 62,20 72,28 C84,40 80,58 50,80Z" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="4 4"/>
+  <circle cx="50" cy="50" r="5" fill="#c4474e"/>
+</svg>
+
+<button class="btn soft hidden" id="adminBtn" type="button">📬 Ответы Полины</button>
+<div id="adminPanel"><div class="card"><button class="btn soft" id="adminClose" type="button" style="float:right;padding:6px 14px">✕</button><h2>Ответы Полины</h2><div id="adminList">Загрузка…</div></div></div>
+<main>
+  <!-- 1. Конверт -->
+  <section class="screen active" id="s-lock">
+    <h1>Полине — с любовью</h1>
+    <p class="sub">Для тебя есть одно новогоднее письмо…</p>
+    <div class="env-wrap">
+      <div class="env" id="env">
+        <div class="back"></div>
+        <div class="letter"><span class="script">Моей любимой</span><small>открой меня ✨</small></div>
+        <div class="side l"></div><div class="side r"></div><div class="side b"></div>
+        <div class="twine"></div>
+        <div class="flap"></div>
+        <div class="seal" id="seal">
+          <div class="half h1"><svg viewBox="0 0 100 100"><use href="#sealArt"/></svg></div>
+          <div class="half h2" style="clip-path:polygon(52% 0,100% 0,100% 100%,44% 100%,58% 60%,46% 35%)"><svg viewBox="0 0 100 100"><use href="#sealArt"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <form class="lock" id="lockForm" autocomplete="off">
+      <label for="code">Чтобы сломать печать, введи кодовое слово:<br><b>как зовут твоего котика?</b></label>
+      <div class="field">
+        <input type="text" id="code" placeholder="Кодовое слово…" autocapitalize="sentences" spellcheck="false">
+        <button class="btn" type="submit">Открыть</button>
+      </div>
+      <div class="msg" id="lockMsg"></div>
+    </form>
+  </section>
+
+  <!-- 2. Тест -->
+  <section class="screen" id="s-quiz">
+    <div class="card">
+      <div class="progress" id="progress"></div>
+      <div class="qnum" id="qnum"></div>
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+      <div class="reply" id="reply"></div>
+    </div>
+  </section>
+
+  <!-- 3. Результат -->
+  <section class="screen result" id="s-result">
+    <div class="card">
+      <div class="big">100%</div>
+      <p><b>Поздравляем! Тест пройден идеально.</b></p>
+      <p>По итогам проверки установлено, что</p>
+      <div class="names">Мосунова Полина Дмитриевна</div>
+      <p>и</p>
+      <div class="names">Осенчугов Алексей Павлович</div>
+      <p>подходят друг другу на все сто.<br>Остался последний вопрос…</p>
+      <button class="btn" id="toProposal" style="margin-top:10px">Какой? 💌</button>
+    </div>
+  </section>
+
+  <!-- 4. Предложение -->
+  <section class="screen" id="s-propose">
+    <div class="card">
+      <div class="ring-stage" id="stage">
+        <span class="sparkle" style="left:30%;top:20px;animation-delay:.2s"></span>
+        <span class="sparkle" style="left:68%;top:6px;animation-delay:.8s"></span>
+        <span class="sparkle" style="left:58%;top:52px;animation-delay:1.3s"></span>
+        <span class="sparkle" style="left:38%;top:64px;animation-delay:.5s"></span>
+        <svg class="ring" id="ring" viewBox="0 0 100 110">
+          <defs>
+            <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff1c2"/><stop offset=".45" stop-color="#d9b25f"/><stop offset="1" stop-color="#a87a2e"/></linearGradient>
+            <linearGradient id="dia" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#dff1ff"/><stop offset="1" stop-color="#b8d8f0"/></linearGradient>
+          </defs>
+          <ellipse cx="50" cy="72" rx="32" ry="30" fill="none" stroke="url(#gold)" stroke-width="8"/>
+          <path d="M38,40 L44,30 L56,30 L62,40 L50,52Z" fill="#c9a25b"/>
+          <path d="M36,28 L42,16 L58,16 L64,28 L50,46Z" fill="url(#dia)" stroke="#fff" stroke-width="1"/>
+          <path d="M42,16 L50,28 L58,16 M36,28 H64 M50,28 V46" stroke="#a9cbe6" stroke-width=".9" fill="none"/>
+        </svg>
+        <div class="box"><div class="lid"></div><div class="base"><div class="velvet"></div></div></div>
+      </div>
+      <div class="names" style="margin-top:4px">Полина,</div>
+      <div class="question">ты будешь моей женой?</div>
+      <div class="answers" id="answers">
+        <button class="btn" id="yesBtn">Да! 💍</button>
+        <button class="btn soft" id="noBtn">Нет</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Финал -->
+  <section class="screen final" id="s-final">
+    <h1>Она сказала «да»! <span class="heart">❤️</span></h1>
+    <p>Полина, ты сделала меня самым счастливым человеком на свете.</p>
+    <p>Впереди — наш общий Новый год и целая жизнь вместе<br>(и, конечно, Тихон 🐾).</p>
+    <p class="script" style="font-size:32px;color:var(--wine);margin-top:14px">Люблю тебя. Твой Алексей</p>
+    <div class="sendbox">
+      <p>И последнее: отправь, пожалуйста, мне свои ответы из теста 💌</p>
+      <div class="sendrow">
+        <a class="btn" id="tgLink" href="#" target="_blank" rel="noopener">Отправить в Telegram</a>
+        <button class="btn soft" id="copyBtn" type="button">Скопировать ответы</button>
+      </div>
+      <div class="copied" id="copied"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Рисунок печати -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <radialGradient id="wax" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#d14a4f"/><stop offset=".55" stop-color="#9b1b22"/><stop offset="1" stop-color="#6a0f15"/></radialGradient>
+    <g id="sealArt">
+      <path d="M50,3 C60,5 63,1 71,6 C79,11 84,9 89,17 C94,25 99,28 97,38 C95,47 99,53 96,62 C93,71 95,77 87,84 C79,91 76,96 66,96 C56,96 52,100 43,97 C34,94 27,97 20,90 C13,83 7,81 5,71 C3,61 0,56 3,46 C6,36 2,30 9,22 C16,14 18,9 28,6 C38,3 41,1 50,3Z" fill="url(#wax)"/>
+      <circle cx="50" cy="50" r="33" fill="none" stroke="#6a0f15" stroke-width="2.5" opacity=".7"/>
+      <circle cx="50" cy="50" r="29" fill="none" stroke="#e46a6e" stroke-width="1" opacity=".5"/>
+      <text x="50" y="62" text-anchor="middle" font-family="Marck Script, cursive" font-size="34" fill="#6a0f15" opacity=".85">П</text>
+      <text x="49" y="61" text-anchor="middle" font-family="Marck Script, cursive" font-size="34" fill="#e8787c" opacity=".55">П</text>
+      <path d="M26,26 Q34,18 44,17" stroke="#fff" stroke-width="3" fill="none" opacity=".35" stroke-linecap="round"/>
+    </g>
+  </defs>
+</svg>
+
+<script>
+(()=>{
+/* ---------- Гирлянда ---------- */
+const bulbs=document.getElementById('bulbs'), colors=['#e8b4b0','#c9a25b','#b0363d','#9fb8a0','#fff1c2'];
+const pathEl=document.querySelector('.garland path'), L=pathEl.getTotalLength();
+for(let i=0;i<26;i++){
+  const p=pathEl.getPointAtLength(L*(i+.5)/26), c=colors[i%colors.length];
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.innerHTML=`<rect x="${p.x-2.5}" y="${p.y}" width="5" height="5" fill="#5f7f66"/><ellipse class="bulb" cx="${p.x}" cy="${p.y+12}" rx="5" ry="8" fill="${c}" style="color:${c};animation-delay:${(i%5)*.45}s"/>`;
+  bulbs.appendChild(g);
+}
+
+/* ---------- Снег ---------- */
+const sc=document.getElementById('snow'), sx=sc.getContext('2d'); let W,H,flakes=[];
+function size(){W=innerWidth;H=innerHeight;[sc,fc].forEach(c=>{c.width=W*devicePixelRatio;c.height=H*devicePixelRatio});sx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);fx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+const fc=document.getElementById('fireworks'), fx=fc.getContext('2d');
+size(); addEventListener('resize',size);
+const N=Math.min(110,Math.round(W*H/9000));
+for(let i=0;i<N;i++)flakes.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.6+.8,s:Math.random()*.6+.3,d:Math.random()*Math.PI*2});
+(function snow(){sx.clearRect(0,0,W,H);
+  for(const f of flakes){f.y+=f.s;f.d+=.01;f.x+=Math.sin(f.d)*.4;if(f.y>H+5){f.y=-5;f.x=Math.random()*W}
+    sx.beginPath();sx.arc(f.x,f.y,f.r,0,7);sx.fillStyle='rgba(255,255,255,.9)';sx.shadowColor='rgba(220,170,170,.6)';sx.shadowBlur=4;sx.fill()}
+  requestAnimationFrame(snow)})();
+
+/* ---------- Экраны ---------- */
+const show=id=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo({top:0,behavior:'smooth'})};
+
+/* ---------- Пароль ---------- */
+const env=document.getElementById('env'), msg=document.getElementById('lockMsg'), input=document.getElementById('code');
+const ok=['тихон','тиша','тихоня','тихончик','tikhon','tihon','tixon'];
+const wrong=['Не-а 🙈 Подумай ещё — он точно обидится!','Почти… но нет 🐾','Подсказка: он мурчит и его имя на «Т» 😉'];
+let tries=0;
+document.getElementById('lockForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const v=input.value.toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я]/g,'');
+  if(ok.includes(v)){
+    msg.style.color='var(--pine)';msg.textContent='Мурр! Печать сломана 💌';input.blur();
+    document.getElementById('lockForm').querySelector('button').disabled=true;
+    tgSend('🔓 Полина ввела пароль и открыла конверт!');env.classList.add('open');env.parentElement.classList.add('opened');
+    setTimeout(()=>{show('s-quiz');renderQ()},3200);
+  }else{
+    msg.style.color='var(--berry)';msg.textContent=wrong[Math.min(tries++,wrong.length-1)];
+    env.classList.remove('shake');void env.offsetWidth;env.classList.add('shake');
+  }
+});
+
+/* ---------- Тест ---------- */
+const OWN='✏️ Свой вариант…';
+const Q=[
+ {q:'Где бы ты хотела провести вечер вдвоём?',o:['Прогулка под снегом с горячим какао','Кино под пледом и обнимашки','Ужин в уютном ресторане','Мастер-класс вдвоём: гончарка, рисование или пряники','Каток, огоньки и глинтвейн','Домик за городом с камином','Вечер настольных игр дома (с Тихоном)'],
+  r:['Правильно! Какао с зефирками уже в планах ☕','Верно! Плед уже ждёт 🧣','Отличный выбор! Столик за мной 🍷','Ура! Слепим что-нибудь кривое, но наше 🏺','Да! Держись за меня крепче ⛸️','Мечта! Трескучий камин и мы 🔥','Тихон одобряет и будет судьёй 🐾']},
+ {q:'Кто первым скажет «я соскучился»?',o:['Я','Ты','Тихон — он всегда первый','Мы одновременно'],
+  r:['Засчитано! Но он скучает не меньше 😉','Правда! И это очень мило 💌','Тихон вне конкуренции 🐾','Конечно, мы же на одной волне 💞']},
+ {q:'На что мы похожи больше всего?',o:['На пряник и глазурь','На ёлку и гирлянду','На чай и тёплый плед','Все варианты верны'],
+  r:['Сладко и неразлучно 🍪','Вместе светимся ярче ✨','Уютнее не бывает 🫖','Абсолютно точно 🎄']},
+ {q:'Что тебе больше всего нравится во мне?',o:['Забота','Чувство юмора','Обнимашки','Как я на тебя смотрю','Всё и сразу'],
+  r:['Буду заботиться ещё больше 💛','Ха-ха, это взаимно 😄','Выдадим без ограничений 🤗','Потому что смотрю на самую красивую ✨','Принято, без сдачи 💞']},
+ {q:'Какими мы будем через 10 лет?',o:['Уютный дом и Тихон-старейшина','Объездим полмира','Большая дружная семья','Всё это вместе'],
+  r:['Тихон одобряет 🐈','Паспорта уже готовы ✈️','Самый тёплый ответ 🏡','Именно так и будет 💍']},
+ {q:'Чего ты больше всего хочешь на Новый год?',o:['Просто хорошо провести вечер вдвоём','Сюрприз','Подарок','Чтобы я сделал что-то особенное своими руками','Поехать куда-нибудь на праздники','Много-много обнимашек'],
+  r:['Будет самый тёплый вечер 🕯️','Сюрприз уже совсем близко 🎁','Записал! Дед Мороз в курсе 🎅','Уже засучиваю рукава 🛠️','Чемодан собираем? 🧳','Начнём прямо сейчас 🤗']},
+ {q:'Что бы ты хотела улучшить в наших отношениях?',text:true}
+];
+const ownR=['Записал! Это очень ценно 💛','Какой классный ответ ✨','Вот это да! Учту обязательно 💞','Мне нравится 🥰'];
+const answers=[];
+let qi=0;
+const prog=document.getElementById('progress'), opts=document.getElementById('opts'), reply=document.getElementById('reply');
+function renderQ(){
+  const q=Q[qi];
+  prog.innerHTML=Q.map((_,i)=>`<span class="${i<qi?'on':''}">❤️</span>`).join('');
+  document.getElementById('qnum').textContent=`Вопрос ${qi+1} из ${Q.length}`;
+  document.getElementById('qtext').textContent=q.q;
+  reply.classList.remove('show');reply.textContent='';
+  opts.className='opts';opts.innerHTML='';
+  if(!q.text){
+    q.o.forEach((t,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=t;b.onclick=()=>pick(t,q.r[i],b);opts.appendChild(b)});
+    const ob=document.createElement('button');ob.className='opt own';ob.textContent=OWN;opts.appendChild(ob);
+    const box=ownBox('Напиши свой вариант…','Ответить',ob);
+    ob.onclick=()=>{if(opts.classList.contains('done'))return;box.classList.add('show');ob.classList.add('picked');box.querySelector('textarea').focus()};
+  }else{
+    const box=ownBox('Напиши честно, как есть — я прочитаю и всё учту 💛','Ответить',null);box.classList.add('show');
+  }
+  const card=document.querySelector('#s-quiz .card');card.classList.remove('fade-in');void card.offsetWidth;card.classList.add('fade-in');
+}
+function ownBox(ph,label,ob){
+  const box=document.createElement('div');box.className='ownbox';
+  box.innerHTML=`<textarea maxlength="600" placeholder="${ph}"></textarea><button class="btn" disabled>${label}</button>`;
+  const ta=box.querySelector('textarea'), bt=box.querySelector('button');
+  ta.oninput=()=>bt.disabled=!ta.value.trim();
+  bt.onclick=()=>{const v=ta.value.trim();if(!v)return;ta.disabled=true;bt.disabled=true;
+    pick(v, Q[qi].text?'Спасибо, что написала честно. Я всё учту 💛':ownR[Math.random()*ownR.length|0], ob, true)};
+  opts.appendChild(box);return box;
+}
+function pick(text,rep,b,own){
+  if(opts.classList.contains('done'))return;
+  opts.classList.add('done');if(b)b.classList.add('picked');
+  answers[qi]={q:Q[qi].q,a:text,own:!!own};
+  save();
+  reply.textContent=rep;reply.classList.add('show');
+  prog.children[qi].classList.add('on');
+  setTimeout(()=>{qi++; if(qi<Q.length)renderQ(); else {show('s-result');burst(W/2,H*.3,40);prepareSend();tgSend(answersText().replace('\n\nИ мой ответ на главный вопрос: ДА 💍','').replace('Мои ответы','📝 Полина прошла тест! Её ответы'))}},2100);
+}
+
+/* ---------- Отправка ответов ---------- */
+function answersText(){
+  return 'Мои ответы из новогоднего теста 💌\n\n'+answers.map((x,i)=>`${i+1}. ${x.q}\n— ${x.a}${x.own?' (свой вариант)':''}`).join('\n\n')+'\n\nИ мой ответ на главный вопрос: ДА 💍';
+}
+function prepareSend(){
+  const t=answersText();
+  document.getElementById('tgLink').href='https://t.me/Alesha_Popovichh?text='+encodeURIComponent(t);
+}
+document.getElementById('copyBtn').onclick=async()=>{
+  const t=answersText(), c=document.getElementById('copied');
+  try{await navigator.clipboard.writeText(t);c.textContent='Скопировано! Вставь в сообщение Алексею 💛'}
+  catch(e){const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+    let ok=false;try{ok=document.execCommand('copy')}catch(_){}
+    ta.remove();c.textContent=ok?'Скопировано! Вставь в сообщение Алексею 💛':'Не получилось скопировать — нажми «Отправить в Telegram» 🙏'}
+};
+
+/* ---------- Уведомления в Telegram-бот ---------- */
+const TG_CHAT='1987216565';
+const TG_K='WS1NOGUwRXoxWkRGbTN4M1haSDNUUmVEbm91RzFIcEFFQUE6OTk3NDE5MzQyOQ==';
+function tgSend(text){
+  if(!TG_CHAT||TG_CHAT.startsWith('__'))return;
+  let k='';try{k=atob(TG_K).split('').reverse().join('')}catch(e){return}
+  const body=new URLSearchParams({chat_id:TG_CHAT,text});
+  try{fetch('https://api.telegram.org/bot'+k+'/sendMessage',{method:'POST',body}).catch(()=>{})}catch(e){}
+}
+
+/* ---------- Сохранение ответов (видит только Алексей) ---------- */
+let dbh=null, saidYes=false, chain=Promise.resolve();
+const runId='run-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+const C=(typeof window.claude!=='undefined'&&window.claude&&window.claude.use)?window.claude:null;
+if(C){
+  C.use('db').then(d=>{dbh=d; if(d&&answers.length)save()}).catch(()=>{});
+  C.use('user').then(async u=>{ if(!u)return; let own=false; try{own=await u.isOwner()}catch(e){} if(own)initAdmin()}).catch(()=>{});
+}
+function save(){
+  if(!dbh)return;
+  const body={at:Date.now(),started:+runId.split('-')[1],answers:answers.filter(Boolean).map(x=>({q:x.q,a:x.a,own:x.own})),saidYes};
+  chain=chain.then(()=>dbh.doc('answers/'+runId).set(body)).catch(()=>{});
+}
+function initAdmin(){
+  const btn=document.getElementById('adminBtn'), panel=document.getElementById('adminPanel'), list=document.getElementById('adminList');
+  btn.classList.remove('hidden');
+  btn.onclick=()=>panel.classList.add('show');
+  document.getElementById('adminClose').onclick=()=>panel.classList.remove('show');
+  panel.onclick=e=>{if(e.target===panel)panel.classList.remove('show')};
+  C.use('db').then(db=>{
+    if(!db){list.textContent='Хранилище сейчас недоступно.';return}
+    const timer=setTimeout(()=>{if(list.textContent==='Загрузка…')list.textContent='Пока не удаётся загрузить ответы, попробуй чуть позже.'},10000);
+    db.collection('answers').orderBy('at','desc').onSnapshot(snap=>{
+      if(!snap.metadata.fromCache)clearTimeout(timer);
+      if(snap.empty){list.textContent='Пока ответов нет. Как только Полина начнёт тест, они появятся здесь сами.';return}
+      list.innerHTML='';
+      snap.docs.forEach(d=>{const v=d.data()||{};const el=document.createElement('div');el.className='ans-set';
+        const w=document.createElement('div');w.className='when';w.textContent=new Date(v.at||0).toLocaleString('ru-RU')+(v.saidYes?'':' · тест ещё в процессе');el.appendChild(w);
+        (v.answers||[]).forEach((x,i)=>{const p=document.createElement('div');p.className='qa';const b=document.createElement('b');b.textContent=(i+1)+'. '+x.q;p.appendChild(b);p.appendChild(document.createElement('br'));p.appendChild(document.createTextNode('— '+x.a+(x.own?' (свой вариант)':'')));el.appendChild(p)});
+        if(v.saidYes){const y=document.createElement('div');y.className='yes';y.textContent='💍 На предложение ответила: ДА';el.appendChild(y)}
+        list.appendChild(el)});
+    },()=>{clearTimeout(timer);list.textContent='Не удалось загрузить ответы.'});
+  });
+}
+
+/* ---------- Предложение ---------- */
+document.getElementById('toProposal').onclick=()=>{show('s-propose');setTimeout(()=>document.getElementById('stage').classList.add('stage-open'),500)};
+const no=document.getElementById('noBtn'), noTexts=['Точно?','Подумай ещё 🥺','Не-а','Кнопка сломалась 😅','Только «да»!'];
+let nc=0;
+function dodge(e){
+  e.preventDefault();
+  const dx=(Math.random()<.5?-1:1)*(60+Math.random()*70), dy=(Math.random()*-90)-20;
+  no.style.transform=`translate(${dx}px,${dy}px) scale(${Math.max(.45,1-nc*.12)})`;
+  no.textContent=noTexts[nc%noTexts.length];nc++;
+  if(nc>=6){no.style.opacity='0';no.style.pointerEvents='none'}
+}
+no.addEventListener('mouseenter',dodge);no.addEventListener('touchstart',dodge,{passive:false});no.addEventListener('click',dodge);
+document.getElementById('yesBtn').onclick=()=>{
+  saidYes=true;save();tgSend('💍 ОНА СКАЗАЛА «ДА»! Поздравляю! 🎉');
+  const ring=document.getElementById('ring');ring.classList.add('fly');
+  startFireworks();
+  setTimeout(()=>show('s-final'),1500);
+};
+
+/* ---------- Фейерверки ---------- */
+let parts=[],fwOn=false;
+const fwCol=['#ffd6d1','#f4a7a3','#ffe9a0','#c9a25b','#ffffff','#e8787c','#b9d8bd'];
+function burst(x,y,n=70){
+  const c=fwCol[Math.random()*fwCol.length|0], c2=fwCol[Math.random()*fwCol.length|0];
+  for(let i=0;i<n;i++){const a=Math.PI*2*i/n+Math.random()*.2, sp=Math.random()*3.6+1.4;
+    parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,c:i%3?c:c2,r:Math.random()*1.6+1.2})}
+  if(!loopOn)loop();
+}
+let rockets=[],loopOn=false;
+function startFireworks(){fwOn=true;let k=0;const t=setInterval(()=>{launch();if(++k>400)clearInterval(t)},650);launch();setTimeout(launch,250)}
+function launch(){rockets.push({x:W*(.15+Math.random()*.7),y:H+10,vy:-(H*.012+Math.random()*3),ty:H*(.12+Math.random()*.35)});if(!loopOn)loop()}
+function loop(){loopOn=true;
+  fx.globalCompositeOperation='destination-out';fx.fillStyle='rgba(0,0,0,.22)';fx.fillRect(0,0,W,H);fx.globalCompositeOperation='lighter';
+  rockets=rockets.filter(r=>{r.y+=r.vy;r.vy*=.985;fx.beginPath();fx.arc(r.x,r.y,2,0,7);fx.fillStyle='#fff3d6';fx.fill();
+    if(r.y<=r.ty||r.vy>-1.2){burst(r.x,r.y,60+(Math.random()*40|0));return false}return true});
+  parts=parts.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.045;p.vx*=.985;p.vy*=.985;p.life-=.012;
+    fx.beginPath();fx.arc(p.x,p.y,p.r,0,7);fx.fillStyle=p.c;fx.globalAlpha=Math.max(p.life,0);fx.fill();fx.globalAlpha=1;return p.life>0});
+  if(parts.length||rockets.length||fwOn)requestAnimationFrame(loop);else{fx.clearRect(0,0,W,H);loopOn=false}
+}
+})();
+</script>
+</body>
+</html>
